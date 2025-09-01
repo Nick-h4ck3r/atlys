@@ -27,22 +27,14 @@ const PostCard: React.FC<PostCardProps> = ({
       onUnauthenticatedAction();
       return;
     }
-    
+
     setIsLiked(!isLiked);
-    setLikeCount(prev => isLiked ? prev - 1 : prev + 1);
+    setLikeCount((prev) => (isLiked ? prev - 1 : prev + 1));
   };
 
   const buttonVariants = {
     hover: { scale: 1.1, y: -2 },
-    tap: { scale: 0.95 }
-  };
-
-  const likeButtonVariants = {
-    initial: { scale: 1 },
-    liked: { 
-      scale: [1, 1.3, 1],
-      color: "#ef4444"
-    }
+    tap: { scale: 0.95 },
   };
 
   return (
@@ -56,14 +48,14 @@ const PostCard: React.FC<PostCardProps> = ({
       >
         <div className="m-[7px] bg-white border border-gray-200 rounded-[18px] p-4 w-[554px] shadow-sm hover:shadow-md transition-shadow duration-300">
           {/* Post Header */}
-          <motion.div 
+          <motion.div
             className="flex flex-col space-y-3"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.1 }}
           >
             <div className="flex items-center space-x-3">
-              <motion.div 
+              <motion.div
                 className="flex-shrink-0 w-[40px] h-[40px] rounded-[7px] overflow-hidden"
                 whileHover={{ scale: 1.05 }}
                 transition={{ duration: 0.2 }}
@@ -87,14 +79,14 @@ const PostCard: React.FC<PostCardProps> = ({
 
             {/* Post Content */}
             <div className="flex items-start space-x-3">
-              <motion.div 
+              <motion.div
                 className="flex-shrink-0 w-[40px] h-[40px] rounded-full overflow-hidden border border-gray-200 flex items-center justify-center bg-[#F2F2F2]"
                 whileHover={{ rotate: 5, scale: 1.1 }}
                 transition={{ duration: 0.2 }}
               >
                 <span className="text-2xl">{post.emoji}</span>
               </motion.div>
-              <motion.p 
+              <motion.p
                 className="text-gray-800 font-inter font-medium text-sm leading-[21px] tracking-[0%] text-[#000000D4]"
                 initial={{ opacity: 0, x: -10 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -107,7 +99,7 @@ const PostCard: React.FC<PostCardProps> = ({
         </div>
 
         {/* Action buttons */}
-        <motion.div 
+        <motion.div
           className="flex items-center space-x-5 mb-2 ml-4"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -139,7 +131,7 @@ const PostCard: React.FC<PostCardProps> = ({
                 strokeLinejoin="round"
               />
             </motion.svg>
-            <motion.span 
+            <motion.span
               className="text-xs font-medium"
               animate={{ color: isLiked ? "#ef4444" : "#6b7280" }}
             >

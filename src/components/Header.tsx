@@ -33,7 +33,9 @@ const Header: React.FC = () => {
               />
             </svg>
           </div>
-          <span className="text-base font-bold text-[#000000CF] transition-colors duration-300 group-hover:text-blue-600">foo-rum</span>
+          <span className="text-base font-bold text-[#000000CF] transition-colors duration-300 group-hover:text-blue-600">
+            foo-rum
+          </span>
         </Link>
 
         {/* Auth Section */}
@@ -46,20 +48,18 @@ const Header: React.FC = () => {
               </span>
               <button
                 onClick={logout}
-                className="text-blue-600 hover:text-blue-700 font-medium text-sm transition-all duration-200 hover:scale-105 relative group"
+                className="text-blue-600 hover:text-blue-700 font-medium text-sm transition-all duration-200 hover:scale-105"
               >
-                <span className="relative z-10">Logout</span>
-                <span className="absolute inset-0 bg-blue-100 rounded-lg transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left"></span>
+                Logout
               </button>
             </div>
           ) : (
             <div className="flex items-center space-x-3 animate-fade-in">
               <Link
                 to={isAuthPage ? "/" : "/signin"}
-                className="text-[#000000CF] font-semibold text-sm transition-all duration-200 hover:text-blue-600 hover:scale-105 relative group"
+                className="text-[#000000CF] font-semibold text-sm transition-all duration-200 hover:text-blue-600 hover:scale-105"
               >
-                <span className="relative z-10">{isAuthPage ? "Back to home" : "Login"}</span>
-                <span className="absolute inset-0 bg-blue-100 rounded-lg transform scale-x-0 group-hover:scale-x-100 transition-transform duration-200 origin-left"></span>
+                {isAuthPage ? "Back to home" : "Login"}
               </Link>
             </div>
           )}
