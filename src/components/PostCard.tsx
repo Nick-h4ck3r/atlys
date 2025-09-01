@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Post } from "../types";
 
@@ -11,6 +11,9 @@ const PostCard: React.FC<PostCardProps> = ({
   post,
   onUnauthenticatedAction,
 }) => {
+  const [isLiked, setIsLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(post.likes);
+
   const handleInteraction = (action: string) => {
     if (onUnauthenticatedAction) {
       onUnauthenticatedAction();
@@ -19,26 +22,58 @@ const PostCard: React.FC<PostCardProps> = ({
     }
   };
 
+  const handleLike = () => {
+    if (onUnauthenticatedAction) {
+      onUnauthenticatedAction();
+      return;
+    }
+    
+    setIsLiked(!isLiked);
+    setLikeCount(prev => isLiked ? prev - 1 : prev + 1);
+  };
+
+  const buttonVariants = {
+    hover: { scale: 1.1, y: -2 },
+    tap: { scale: 0.95 }
+  };
+
+  const likeButtonVariants = {
+    initial: { scale: 1 },
+    liked: { 
+      scale: [1, 1.3, 1],
+      color: "#ef4444"
+    }
+  };
+
   return (
     <div className="flex justify-center mb-4">
       <motion.div
-        className="w-[568px] rounded-[21px] opacity-100 bg-[#00000008]"
+        className="w-[568px] rounded-[21px] opacity-100 bg-[#00000008] hover:bg-[#00000012] transition-colors duration-300"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        whileHover={{ y: -2 }}
-        transition={{ duration: 0.3 }}
+        whileHover={{ y: -4, transition: { duration: 0.2 } }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
       >
-        <div className="m-[7px] bg-white border border-gray-200 rounded-[18px] p-4 w-[554px]">
+        <div className="m-[7px] bg-white border border-gray-200 rounded-[18px] p-4 w-[554px] shadow-sm hover:shadow-md transition-shadow duration-300">
           {/* Post Header */}
-          <div className="flex flex-col space-y-3">
+          <motion.div 
+            className="flex flex-col space-y-3"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.1 }}
+          >
             <div className="flex items-center space-x-3">
-              <div className="flex-shrink-0 w-[40px] h-[40px] rounded-[7px] overflow-hidden">
+              <motion.div 
+                className="flex-shrink-0 w-[40px] h-[40px] rounded-[7px] overflow-hidden"
+                whileHover={{ scale: 1.05 }}
+                transition={{ duration: 0.2 }}
+              >
                 <img
                   src={post.author.avatar}
                   alt={post.author.name}
                   className="w-full h-full object-cover"
                 />
-              </div>
+              </motion.div>
 
               <div>
                 <h3 className="font-semibold text-[#000000] text-[13px]">
@@ -52,42 +87,72 @@ const PostCard: React.FC<PostCardProps> = ({
 
             {/* Post Content */}
             <div className="flex items-start space-x-3">
-              <div className="flex-shrink-0 w-[40px] h-[40px] rounded-full overflow-hidden border border-gray-200 flex items-center justify-center bg-[#F2F2F2]">
+              <motion.div 
+                className="flex-shrink-0 w-[40px] h-[40px] rounded-full overflow-hidden border border-gray-200 flex items-center justify-center bg-[#F2F2F2]"
+                whileHover={{ rotate: 5, scale: 1.1 }}
+                transition={{ duration: 0.2 }}
+              >
                 <span className="text-2xl">{post.emoji}</span>
-              </div>
-              <p className="text-gray-800 font-inter font-medium text-sm leading-[21px] tracking-[0%] text-[#000000D4]">
+              </motion.div>
+              <motion.p 
+                className="text-gray-800 font-inter font-medium text-sm leading-[21px] tracking-[0%] text-[#000000D4]"
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.2 }}
+              >
                 {post.content}
-              </p>
+              </motion.p>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Action buttons */}
-        <div className="flex items-center space-x-5 mb-2 ml-4">
-          <button
-            onClick={() => handleInteraction("like")}
-            className="p-1 text-gray-500 hover:text-red-500 transition-colors duration-200"
+        <motion.div 
+          className="flex items-center space-x-5 mb-2 ml-4"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          <motion.button
+            onClick={handleLike}
+            className="p-1 text-gray-500 hover:text-red-500 transition-colors duration-200 flex items-center space-x-1"
+            variants={buttonVariants}
+            whileHover="hover"
+            whileTap="tap"
+            animate={isLiked ? "liked" : "initial"}
+            transition={{ duration: 0.2 }}
           >
-            <svg
+            <motion.svg
               width="18"
               height="18"
               viewBox="0 0 18 18"
-              fill="none"
+              fill={isLiked ? "#ef4444" : "none"}
               xmlns="http://www.w3.org/2000/svg"
+              animate={{ scale: isLiked ? [1, 1.2, 1] : 1 }}
+              transition={{ duration: 0.3 }}
             >
               <path
                 d="M9 15.75C9.75 15.75 16.5 12.0002 16.5 6.75032C16.5 4.12542 14.25 2.28304 12 2.25049C10.875 2.23421 9.75 2.62549 9 3.75044C8.25 2.62549 7.10554 2.25049 6 2.25049C3.75 2.25049 1.5 4.12542 1.5 6.75032C1.5 12.0002 8.25 15.75 9 15.75Z"
-                stroke="#2F384C"
+                stroke={isLiked ? "#ef4444" : "#2F384C"}
                 strokeWidth="1.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
-            </svg>
-          </button>
+            </motion.svg>
+            <motion.span 
+              className="text-xs font-medium"
+              animate={{ color: isLiked ? "#ef4444" : "#6b7280" }}
+            >
+              {likeCount}
+            </motion.span>
+          </motion.button>
 
-          <button
+          <motion.button
             onClick={() => handleInteraction("comment")}
-            className="p-1 text-gray-500 hover:text-blue-500 transition-colors duration-200"
+            className="p-1 text-gray-500 hover:text-blue-500 transition-colors duration-200 flex items-center space-x-1"
+            variants={buttonVariants}
+            whileHover="hover"
+            whileTap="tap"
           >
             <svg
               width="18"
@@ -104,11 +169,15 @@ const PostCard: React.FC<PostCardProps> = ({
                 strokeLinejoin="round"
               />
             </svg>
-          </button>
+            <span className="text-xs font-medium">{post.comments}</span>
+          </motion.button>
 
-          <button
+          <motion.button
             onClick={() => handleInteraction("share")}
-            className="p-1 text-gray-500 hover:text-green-500 transition-colors duration-200"
+            className="p-1 text-gray-500 hover:text-green-500 transition-colors duration-200 flex items-center space-x-1"
+            variants={buttonVariants}
+            whileHover="hover"
+            whileTap="tap"
           >
             <svg
               width="18"
@@ -132,8 +201,9 @@ const PostCard: React.FC<PostCardProps> = ({
                 </clipPath>
               </defs>
             </svg>
-          </button>
-        </div>
+            <span className="text-xs font-medium">{post.shares}</span>
+          </motion.button>
+        </motion.div>
       </motion.div>
     </div>
   );

@@ -11,6 +11,7 @@ const Feed: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [authMode, setAuthMode] = useState<"signin" | "signup">("signin");
+  const [postsLoaded, setPostsLoaded] = useState(false);
 
   // Sample posts data
   useEffect(() => {
@@ -65,7 +66,12 @@ const Feed: React.FC = () => {
         shares: 2,
       },
     ];
-    setPosts(samplePosts);
+    
+    // Simulate loading delay for better animation effect
+    setTimeout(() => {
+      setPosts(samplePosts);
+      setPostsLoaded(true);
+    }, 300);
   }, []);
 
   const handlePostCreated = (newPost: Post) => {
@@ -88,23 +94,43 @@ const Feed: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50">
       <Header />
 
       <main className="max-w-4xl mx-auto px-4 py-6">
-        <PostEditor
-          onPostCreated={handlePostCreated}
-          onUnauthenticatedAction={handleUnauthenticatedAction}
-        />
+        <div className="animate-fade-in">
+          <PostEditor
+            onPostCreated={handlePostCreated}
+            onUnauthenticatedAction={handleUnauthenticatedAction}
+          />
+        </div>
 
-        <div className="space-y-4">
-          {posts.map((post) => (
-            <PostCard
+        <div className="space-y-4 mt-8">
+          {postsLoaded && posts.map((post, index) => (
+            <div
               key={post.id}
-              post={post}
-              onUnauthenticatedAction={handleUnauthenticatedAction}
-            />
+              className="animate-slide-in-up"
+              style={{
+                animationDelay: `${index * 0.1}s`,
+                animationFillMode: 'both'
+              }}
+            >
+              <PostCard
+                post={post}
+                onUnauthenticatedAction={handleUnauthenticatedAction}
+              />
+            </div>
           ))}
+          
+          {!postsLoaded && (
+            <div className="flex justify-center items-center py-12">
+              <div className="flex space-x-2">
+                <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce"></div>
+                <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+              </div>
+            </div>
+          )}
         </div>
       </main>
 
